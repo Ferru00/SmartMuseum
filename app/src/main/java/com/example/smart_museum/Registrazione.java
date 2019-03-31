@@ -1,11 +1,29 @@
 package com.example.smart_museum;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.TextureView;
 import android.view.View;
+import android.widget.EditText;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Registrazione extends AppCompatActivity {
 
@@ -15,15 +33,69 @@ public class Registrazione extends AppCompatActivity {
         setContentView(R.layout.activity_registrazione);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
+    private void printOK ()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Registraziome effettuata!");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int id) {
+            Intent Registrazione = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(Registrazione);
+            finish();
+        }
+         });
+        builder.setCancelable(false);
+        builder.show();
+
+    }
+
+    public void Registrazione (View view)
+    {
+        final EditText Nome = findViewById(R.id.Nome);
+        final EditText Cognome = findViewById(R.id.Cognome);
+        final EditText Email = findViewById(R.id.Email);
+        final EditText Password = findViewById(R.id.Password);
+        final EditText Conf_Password = findViewById(R.id.Conferma_password);
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        String url = "http://192.168.178.69/App/Signup.php";
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        Log.d("Response", response);
+                        if(response.equals("Ok")){
+                            printOK();
+                        }
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.toString());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Nome", Nome.getText().toString());
+                params.put("Cognome", Cognome.getText().toString());
+                params.put("Email", Email.getText().toString());
+                params.put("Password", Password.getText().toString());
+
+                return params;
+            }
+        };
+        queue.add(postRequest);
+    }
 }
