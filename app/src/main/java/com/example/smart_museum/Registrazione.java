@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -38,18 +39,17 @@ public class Registrazione extends AppCompatActivity {
     private void printOK ()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Registraziome effettuata!");
+        builder.setTitle("Registrazione effettuata!");
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int id) {
-            Intent Registrazione = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(Registrazione);
+            Intent main = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(main);
             finish();
         }
          });
         builder.setCancelable(false);
         builder.show();
-
     }
 
     public void Registrazione (View view)
@@ -60,42 +60,133 @@ public class Registrazione extends AppCompatActivity {
         final EditText Password = findViewById(R.id.Password);
         final EditText Conf_Password = findViewById(R.id.Conferma_password);
 
-        RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url = "http://192.168.178.69/App/Signup.php";
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        String passwordPattern =  "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,}$";
+
+        if (Nome.getText().toString().equals("") || Cognome.getText().toString().equals("") || Email.getText().toString().equals("") || Password.getText().toString().equals("") || Conf_Password.getText().toString().equals(""))
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Attenzione. Compila tutti i campi.");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+            builder.setCancelable(false);
+            builder.show();
+
+            TextView errore = findViewById(R.id.Errori);
+            errore.setVisibility(View.VISIBLE);
+            errore.setText("");
+            errore.append("Compila tutti i campi.");
+
+        }
+        else
+        {
+            if (Email.getText().toString().trim().matches(emailPattern))
+            {
+                if (Password.getText().toString().trim().matches(passwordPattern))
                 {
-                    @Override
-                    public void onResponse(String response) {
-                        // response
-                        Log.d("Response", response);
-                        if(response.equals("Ok")){
-                            printOK();
-                        }
+                    if (Password.getText().toString().equals(Conf_Password.getText().toString()))
+                    {
+                        RequestQueue queue = Volley.newRequestQueue(this);
+
+                        String url = "http://192.168.178.69/App/Signup.php";
+                        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                                new Response.Listener<String>()
+                                {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        // response
+                                        Log.d("Response", response);
+                                        if(response.equals("Ok")){
+                                            printOK();
+                                        }
+                                    }
+                                },
+                                new Response.ErrorListener()
+                                {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        // error
+                                        Log.d("Error.Response", error.toString());
+                                    }
+                                }
+                        ) {
+                            @Override
+                            protected Map<String, String> getParams()
+                            {
+                                Map<String, String>  params = new HashMap<>();
+                                params.put("Nome", Nome.getText().toString());
+                                params.put("Cognome", Cognome.getText().toString());
+                                params.put("Email", Email.getText().toString());
+                                params.put("Password", Password.getText().toString());
+
+                                return params;
+                            }
+                        };
+                        queue.add(postRequest);
                     }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("Error.Response", error.toString());
+                    //Messaggio errore corrispondenza password
+                    else
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Attenzione. Le password non corrispondono");
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+                        builder.setCancelable(false);
+                        builder.show();
+
+                        TextView errore = findViewById(R.id.Errori);
+                        errore.setVisibility(View.VISIBLE);
+                        errore.setText("");
+                        errore.append("Le password non corrispondono.");
                     }
                 }
-        ) {
-            @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String>  params = new HashMap<>();
-                params.put("Nome", Nome.getText().toString());
-                params.put("Cognome", Cognome.getText().toString());
-                params.put("Email", Email.getText().toString());
-                params.put("Password", Password.getText().toString());
+                //Messaggio errore formato Password
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Attenzione. Il formato della password è errato.");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+                    builder.setCancelable(false);
+                    builder.show();
 
-                return params;
+                    TextView errore = findViewById(R.id.Errori);
+                    errore.setVisibility(View.VISIBLE);
+                    errore.setText("");
+                    errore.append("Password errata.");
+                }
             }
-        };
-        queue.add(postRequest);
+            //Messaggio errore formato Email
+            else
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Attenzione. Il formato dell'email è errato.");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+                builder.setCancelable(false);
+                builder.show();
+
+                TextView errore = findViewById(R.id.Errori);
+                errore.setVisibility(View.VISIBLE);
+                errore.setText("");
+                errore.append("Email errata.");
+            }
+
+        }
+
     }
 }
