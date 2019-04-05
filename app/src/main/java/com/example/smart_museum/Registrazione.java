@@ -92,7 +92,7 @@ public class Registrazione extends AppCompatActivity {
                     {
                         RequestQueue queue = Volley.newRequestQueue(this);
 
-                        String url = "http://192.168.178.69/App/Signup.php";
+                        String url = API.getUrl_signup();
                         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                                 new Response.Listener<String>()
                                 {
