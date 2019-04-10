@@ -113,7 +113,9 @@ public class Registrazione extends AppCompatActivity {
                                         Log.d("Error.Response", error.toString());
                                     }
                                 }
-                        ) {
+                        )
+
+                        {
                             @Override
                             protected Map<String, String> getParams()
                             {
@@ -122,7 +124,6 @@ public class Registrazione extends AppCompatActivity {
                                 params.put("Cognome", Cognome.getText().toString());
                                 params.put("Email", Email.getText().toString());
                                 params.put("Password", Password.getText().toString());
-
                                 return params;
                             }
                         };
