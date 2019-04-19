@@ -11,25 +11,25 @@ import java.util.ArrayList;
 
 class Adapter extends BaseAdapter {
     Activity context;
-    ArrayList <Studente> studenti;
+    ArrayList <Musei> museo;
     private static LayoutInflater inflater = null;
 
-    public Adapter(Activity context, ArrayList<Studente> studenti)
+    public Adapter(Activity context, ArrayList<Musei> musei)
     {
         this.context = context;
-        this.studenti = studenti;
+        this.museo = musei;
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int  getCount() {
-        return studenti.size();
+        return museo.size();
     }
 
     @Override
-    public Studente getItem(int position)
+    public Musei getItem(int position)
     {
-        return studenti.get(position);
+        return museo.get(position);
     }
 
     @Override
@@ -42,12 +42,12 @@ class Adapter extends BaseAdapter {
     public View getView (int position, View convertView, ViewGroup parent)
     {
         View itemView = convertView;
-        itemView = (itemView == null) ? inflater.inflate(R.layout.prova,null):itemView;
+        itemView = (itemView == null) ? inflater.inflate(R.layout.lista,null):itemView;
         TextView nome = (TextView) itemView.findViewById(R.id.prova_nome);
         TextView email = (TextView) itemView.findViewById(R.id.prova_email);
-        Studente selezionato = studenti.get(position);
-        nome.setText(selezionato.nome);
-        email.setText(selezionato.email);
+        Musei selezionato = museo.get(position);
+        nome.setText(selezionato.getNome());
+        email.setText(selezionato.getIndirizzo());
         return itemView;
     }
 }

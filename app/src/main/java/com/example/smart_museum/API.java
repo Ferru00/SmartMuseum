@@ -5,15 +5,13 @@ public class API {
     //URLs
     static private String url_login = "http://192.168.178.69/App/Login.php";
     static private String url_signup = "http://192.168.178.69/App/Signup.php";
+    static private String url_lista_musei = "http://192.168.178.69/App/Lista_musei.php";
 
-    public static String getUrl_login() {
-        return url_login;
-    }
-    public static String getUrl_signup() {
-        return url_signup;
-    }
+    public static String getUrl_lista_musei() { return url_lista_musei; }
+    public static String getUrl_login() { return url_login; }
+    public static String getUrl_signup() { return url_signup; }
 
-    //Nome e cookie
+
 
     static public String nome;
     static public String email;

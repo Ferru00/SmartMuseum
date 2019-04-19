@@ -1,8 +1,6 @@
 package com.example.smart_museum;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -25,15 +23,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ListView list;
-    private ArrayList<Studente> arraylist = new ArrayList<>();
+    private ArrayList<Musei> arraylist = new ArrayList<>();
     private Adapter adapter;
 
     @Override
@@ -60,27 +59,50 @@ public class Home extends AppCompatActivity
         info = header.findViewById(R.id.Home_email);
         info.setText(API.getEmail());
 
-        populateList();
-
-
+        GenerazioneLista();
     }
 
-    public void populateList ()
+    public void PopolateLista (final ArrayList<Musei> arraylist)
+    {
+        adapter = new Adapter(this, arraylist);
+        list.setAdapter(adapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Object listItem = list.getItemAtPosition(position);
+                Toast.makeText(Home.this,"ID: "+arraylist.get(position).getId()+"Cliccato a:"+ arraylist.get(position).getNome()
+                        , Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void GenerazioneLista()
     {
         list = (ListView) findViewById(R.id.Listview);
 
         RequestQueue queue = Volley.newRequestQueue(this);
-
-        String url = API.getUrl_signup();
+        String url = API.getUrl_lista_musei();
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {
                     @Override
                     public void onResponse(String response) {
-                        // response
-                        Log.d("Response", response);
-                        if(response.equals("Ok")){
-                            printOK();
+                        Log.d("RISPOSTA",response);
+                        try{
+                            JSONObject object = new JSONObject(response);
+                            Log.d("successo",object.getString("success"));
+                            if(object.getString("success").equals("ok"))
+                            {
+                                Musei temp;
+                                for (int i = 0; i < 9; i++)
+                                {
+                                    temp = new Musei(object.getString("museo"+i),object.getString("indirizzo"+i),object.getString("id"+i));
+                                    arraylist.add(temp);
+                                }
+                                PopolateLista(arraylist);
+                            }
+                        }catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
                 },
@@ -92,24 +114,13 @@ public class Home extends AppCompatActivity
                         Log.d("Error.Response", error.toString());
                     }
                 }
-        )
-
-        {
-            @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String>  params = new HashMap<>();
-                params.put("Nome", Nome.getText().toString());
-                params.put("Cognome", Cognome.getText().toString());
-                params.put("Email", Email.getText().toString());
-                params.put("Password", Password.getText().toString());
-                return params;
-            }
+        ) {
         };
         queue.add(postRequest);
-        /*arraylist.add(new Studente("aaaaaaaaaaaaaaaaaaa","email-1"));
-        arraylist.add(new Studente("bbbbbbbbbbbbbbbbbbb","email-2"));
-        arraylist.add(new Studente("ccccccccccccccccc","email-3"));
+
+        /*arraylist.add(new Musei("aaaaaaaaaaaaaaaaaaa","email-1"));
+        arraylist.add(new Musei("bbbbbbbbbbbbbbbbbbb","email-2"));
+        arraylist.add(new Musei("ccccccccccccccccc","email-3"));
         adapter = new Adapter(this, arraylist);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
