@@ -1,5 +1,6 @@
 package com.example.smart_museum;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +32,8 @@ import java.util.ArrayList;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private TextView museo;
 
     private ListView list;
     private ArrayList<Musei> arraylist = new ArrayList<>();
@@ -59,6 +63,8 @@ public class Home extends AppCompatActivity
         info = header.findViewById(R.id.Home_email);
         info.setText(API.getEmail());
 
+        museo = findViewById(R.id.Titolo_museo);
+
         GenerazioneLista();
     }
 
@@ -72,6 +78,31 @@ public class Home extends AppCompatActivity
                 //Object listItem = list.getItemAtPosition(position);
                 Toast.makeText(Home.this,"ID: "+arraylist.get(position).getId()+"Cliccato a:"+ arraylist.get(position).getNome()
                         , Toast.LENGTH_SHORT).show();
+
+                list.setVisibility(View.GONE);
+                TextView msg = findViewById(R.id.startmsg);
+                msg.setVisibility(View.GONE);
+
+                msg = findViewById(R.id.Titolo_museo);
+                msg.setText(arraylist.get(position).getNome());
+                msg.setVisibility(View.VISIBLE);
+
+                ImageView image = findViewById(R.id.image_museo);
+                image.setVisibility(View.VISIBLE);
+
+                msg = findViewById(R.id.IndirizzoMsg);
+                msg.setVisibility(View.VISIBLE);
+
+                msg = findViewById(R.id.Indirizzo);
+                msg.setText(arraylist.get(position).getIndirizzo());
+                msg.setVisibility(View.VISIBLE);
+
+                msg = findViewById(R.id.DescrizioneMsg);
+                msg.setVisibility(View.VISIBLE);
+
+                msg = findViewById(R.id.Descrizione);
+                msg.setText(arraylist.get(position).getDescrizione());
+                msg.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -96,7 +127,7 @@ public class Home extends AppCompatActivity
                                 Musei temp;
                                 for (int i = 0; i < 9; i++)
                                 {
-                                    temp = new Musei(object.getString("museo"+i),object.getString("indirizzo"+i),object.getString("id"+i));
+                                    temp = new Musei(object.getString("museo"+i),object.getString("indirizzo"+i),object.getString("id"+i), object.getString("descrizione"+i));
                                     arraylist.add(temp);
                                 }
                                 PopolateLista(arraylist);
