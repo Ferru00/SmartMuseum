@@ -1,6 +1,6 @@
 package com.example.smart_museum;
 
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,8 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView;
@@ -65,8 +67,19 @@ public class Home extends AppCompatActivity
 
         museo = findViewById(R.id.Titolo_museo);
 
+       // disableScroll();
         GenerazioneLista();
     }
+
+    public void enableScroll(){
+        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
+        viewGroup.setEnabled(true);
+    }
+    public void disableScroll(){
+        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
+        viewGroup.setEnabled(true);
+    }
+
 
     public void PopolateLista (final ArrayList<Musei> arraylist)
     {
@@ -82,12 +95,16 @@ public class Home extends AppCompatActivity
                 list.setVisibility(View.GONE);
                 TextView msg = findViewById(R.id.startmsg);
                 msg.setVisibility(View.GONE);
+                //enableScroll();
 
                 msg = findViewById(R.id.Titolo_museo);
                 msg.setText(arraylist.get(position).getNome());
                 msg.setVisibility(View.VISIBLE);
 
                 ImageView image = findViewById(R.id.image_museo);
+                String StringGenerated = "testmuseo".concat(arraylist.get(position).getId());
+                int idmuseo = getResources().getIdentifier(StringGenerated, "drawable", getPackageName());
+                image.setImageResource(idmuseo);
                 image.setVisibility(View.VISIBLE);
 
                 msg = findViewById(R.id.IndirizzoMsg);
