@@ -3,6 +3,7 @@ package com.example.smart_museum;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -67,18 +68,9 @@ public class Home extends AppCompatActivity
 
         museo = findViewById(R.id.Titolo_museo);
 
-       // disableScroll();
         GenerazioneLista();
     }
 
-    public void enableScroll(){
-        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
-        viewGroup.setEnabled(true);
-    }
-    public void disableScroll(){
-        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
-        viewGroup.setEnabled(true);
-    }
 
 
     public void PopolateLista (final ArrayList<Musei> arraylist)
@@ -95,31 +87,24 @@ public class Home extends AppCompatActivity
                 list.setVisibility(View.GONE);
                 TextView msg = findViewById(R.id.startmsg);
                 msg.setVisibility(View.GONE);
-                //enableScroll();
+
+                ScrollView scroll = (ScrollView) findViewById(R.id.scroll);
+                scroll.setVisibility(View.VISIBLE);
 
                 msg = findViewById(R.id.Titolo_museo);
                 msg.setText(arraylist.get(position).getNome());
-                msg.setVisibility(View.VISIBLE);
 
                 ImageView image = findViewById(R.id.image_museo);
                 String StringGenerated = "testmuseo".concat(arraylist.get(position).getId());
                 int idmuseo = getResources().getIdentifier(StringGenerated, "drawable", getPackageName());
                 image.setImageResource(idmuseo);
-                image.setVisibility(View.VISIBLE);
-
-                msg = findViewById(R.id.IndirizzoMsg);
-                msg.setVisibility(View.VISIBLE);
 
                 msg = findViewById(R.id.Indirizzo);
                 msg.setText(arraylist.get(position).getIndirizzo());
-                msg.setVisibility(View.VISIBLE);
 
-                msg = findViewById(R.id.DescrizioneMsg);
-                msg.setVisibility(View.VISIBLE);
 
                 msg = findViewById(R.id.Descrizione);
                 msg.setText(arraylist.get(position).getDescrizione());
-                msg.setVisibility(View.VISIBLE);
             }
         });
     }
