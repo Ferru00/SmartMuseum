@@ -1,7 +1,14 @@
 package com.example.smart_museum;
 
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,6 +48,7 @@ public class Home extends AppCompatActivity
     private ListView list;
     private ArrayList<Musei> arraylist = new ArrayList<>();
     private Adapter adapter;
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,18 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        FloatingActionButton myFab = (FloatingActionButton) findViewById(R.id.fab);
+        myFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent ScanCode = new Intent(getApplicationContext(), ScanCode.class);
+                startActivity(ScanCode);
+
+            }
+        });
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+
 
         View header = ((NavigationView)findViewById(R.id.nav_view)).getHeaderView(0);
 
@@ -102,9 +122,14 @@ public class Home extends AppCompatActivity
                 msg = findViewById(R.id.Indirizzo);
                 msg.setText(arraylist.get(position).getIndirizzo());
 
-
                 msg = findViewById(R.id.Descrizione);
                 msg.setText(arraylist.get(position).getDescrizione());
+
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                int action = getResources().getIdentifier("action_camera", "drawable", getPackageName());
+                fab.setImageResource(action);
+                fab.show();
+
             }
         });
     }
