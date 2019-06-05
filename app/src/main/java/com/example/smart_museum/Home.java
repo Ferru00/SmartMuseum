@@ -50,12 +50,21 @@ public class Home extends AppCompatActivity
     private Adapter adapter;
     private static final int MY_CAMERA_REQUEST_CODE = 100;
 
+    public static ContainerOpera serialize = new ContainerOpera();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //serialize.deleteFile(String.valueOf(getFilesDir()));
+
+        serialize.LoadOpera(getApplicationContext());
+        Log.i("OPERE",String.valueOf(serialize.cippi()));
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -104,6 +113,8 @@ public class Home extends AppCompatActivity
                 Toast.makeText(Home.this,"ID: "+arraylist.get(position).getId()+"Cliccato a:"+ arraylist.get(position).getNome()
                         , Toast.LENGTH_SHORT).show();
 
+                API.setMuseoSelez(arraylist.get(position).getId());
+
                 list.setVisibility(View.GONE);
                 TextView msg = findViewById(R.id.startmsg);
                 msg.setVisibility(View.GONE);
@@ -129,7 +140,6 @@ public class Home extends AppCompatActivity
                 int action = getResources().getIdentifier("action_camera", "drawable", getPackageName());
                 fab.setImageResource(action);
                 fab.show();
-
             }
         });
     }
@@ -175,20 +185,6 @@ public class Home extends AppCompatActivity
         ) {
         };
         queue.add(postRequest);
-
-        /*arraylist.add(new Musei("aaaaaaaaaaaaaaaaaaa","email-1"));
-        arraylist.add(new Musei("bbbbbbbbbbbbbbbbbbb","email-2"));
-        arraylist.add(new Musei("ccccccccccccccccc","email-3"));
-        adapter = new Adapter(this, arraylist);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Object listItem = list.getItemAtPosition(position);
-                Toast.makeText(Home.this,"Cliccato a:"+ arraylist.get(position).nome
-                        , Toast.LENGTH_SHORT).show();
-            }
-        });*/
     }
 
     @Override
@@ -234,7 +230,8 @@ public class Home extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
-
+            Intent salvataggi = new Intent(getApplicationContext(), Activity_Salvataggi.class);
+            startActivity(salvataggi);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

@@ -12,4 +12,5 @@
     <string name="title_activity_qrscan_">QRScan_Activity</string>
     <string name="title_activity_scan_code">ScanCode</string>
     <string name="title_activity_opera">Opera</string>
+    <string name="title_activity__salvataggi">Activity_Salvataggi</string>
 </resources>

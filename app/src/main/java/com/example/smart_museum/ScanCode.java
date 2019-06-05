@@ -29,7 +29,7 @@ public class ScanCode extends AppCompatActivity implements ZXingScannerView.Resu
         String res = result.toString();
         intent.putExtra("result", res);
         startActivity(intent);
-
+        finish();
     }
 
     @Override

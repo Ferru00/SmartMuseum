@@ -3,6 +3,7 @@ package com.example.smart_museum;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar pbar;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         pbar = (ProgressBar) findViewById(R.id.progressBar);
+
+
     }
 
     @Override
@@ -122,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                                     API.setNome(object.getString("nome"));
                                     API.setEmail(object.getString("email"));
                                     API.setCookie(object.getString("cookie"));
+                                    SaveSharedPreference.setUserCookie(getApplicationContext(),object.getString("cookie") );
                                     Intent home = new Intent(getApplicationContext(), Home.class);
                                     startActivity(home);
                                     finish();
@@ -161,7 +167,8 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent Registrazione = new Intent(this, Registrazione.class);
         startActivity(Registrazione);
-        finish();
     }
+
+
 
 }
